@@ -18,16 +18,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init({
     name: DataTypes.STRING,
-    sku: DataTypes.STRING,
+    description: DataTypes.TEXT,
     price: DataTypes.DECIMAL,
-    description: DataTypes.TEXT
+    stockQuantity: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Product',
   });
   return Product;
 };
-
-// Product.associate = (models) => {
-//   Product.belongsToMany(models.Order, { through: models.OrderItem, foreignKey: 'productId' });
-// };

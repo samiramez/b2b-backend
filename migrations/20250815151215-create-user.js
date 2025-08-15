@@ -9,19 +9,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+      username: {
+        type: Sequelize.STRING
       },
-      passwordHash: {
-        type: Sequelize.STRING,
-        allowNull: false
+      email: {
+        type: Sequelize.STRING
+      },
+      password: {
+        type: Sequelize.STRING
       },
       role: {
-        type: Sequelize.ENUM('admin', 'customer', 'supplier'),
-        allowNull: false,
-        defaultValue: 'customer' // optional: set default role
+        type: Sequelize.ENUM('admin', 'customer', 'supplier')
       },
       createdAt: {
         allowNull: false,

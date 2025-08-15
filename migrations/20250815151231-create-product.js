@@ -12,14 +12,14 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      sku: {
-        type: Sequelize.STRING
+      description: {
+        type: Sequelize.TEXT
       },
       price: {
         type: Sequelize.DECIMAL
       },
-      description: {
-        type: Sequelize.TEXT
+      stockQuantity: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

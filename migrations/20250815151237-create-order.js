@@ -13,9 +13,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.ENUM('pending', 'completed', 'cancelled')
       },
-      total: {
+      totalAmount: {
         type: Sequelize.DECIMAL
       },
       createdAt: {

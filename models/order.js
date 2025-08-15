@@ -19,13 +19,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Order.init({
     userId: DataTypes.INTEGER,
-    status: DataTypes.STRING,
-    total: DataTypes.DECIMAL
+    status: DataTypes.ENUM('pending', 'completed', 'cancelled'),
+    totalAmount: DataTypes.DECIMAL
   }, {
     sequelize,
     modelName: 'Order',
   });
   return Order;
 };
-
-// Remove the Order.associate definition outside the module.exports

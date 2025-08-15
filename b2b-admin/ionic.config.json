@@ -1,0 +1,7 @@
+{
+  "name": "b2b-admin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
