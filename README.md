@@ -77,9 +77,10 @@ git clone https://github.com/yourusername/b2b-platform.git
 cd b2b-platform/b2b-backend
 npm install
 
-
+```
 
 Create a .env file:
+```
 PORT=4000
 JWT_SECRET=change_me_please
 DB_HOST=localhost
@@ -89,22 +90,23 @@ DB_USER=postgres
 DB_PASS=admin
 NODE_ENV=development
 FRONTEND_URL=http://localhost:8100
-
+```
 
 Start backend server:
-
+```
 node app.js
-
+```
 
 Swagger API docs: http://localhost:4000/api/docs
 
 
 
 Frontend
+```
 cd ../b2b-frontend
 npm install
 ionic serve
-
+```
 
 Frontend available at: http://localhost:8100
 
@@ -139,10 +141,10 @@ Endpoints include:
 Docker Setup
 
 Run backend + PostgreSQL with Docker Compose:
-
+```
 cd b2b-backend
 docker-compose up --build
-
+```
 
 Services:
 
