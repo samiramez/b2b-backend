@@ -1,50 +1,76 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { jwtDecode } from 'jwt-decode';
-import { environment } from '../../environments/environment';
+import { Observable, catchError, throwError } from 'rxjs';
+import {jwtDecode} from 'jwt-decode';
+import { endPoints } from 'src/api/apiConfig';
 
 export type UserRole = 'admin' | 'supplier' | 'customer';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private tokenKey = 'token';
-  private base = environment.api;
-  
 
   constructor(private http: HttpClient) {}
 
-  login(body: { email: string; password: string }) {
-    return this.http.post<{ token: string }>(`${this.base}/auth/login`, body);
+  /** Login and return JWT token */
+  login(body: {
+    email: string;
+    password: string;
+  }): Observable<{ token: string }> {
+    return this.http
+      .post<{ token: string }>(endPoints.login.login, body)
+      .pipe(catchError(this.handleError));
   }
 
-  setToken(token: string) {
+  /** Save token */
+  setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
   }
-  getToken() {
+
+  /** Get token */
+  getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
-  logout() {
+
+  /** Logout user */
+  logout(): void {
     localStorage.removeItem(this.tokenKey);
   }
 
+  /** Check if user is logged in */
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.exp * 1000 > Date.now(); // check expiration
+    } catch {
+      return false;
+    }
   }
 
+  /** Extract user role from token */
   getUserRole(): UserRole | null {
-    const t = this.getToken();
-    if (!t) return null;
+    const token = this.getToken();
+    if (!token) return null;
     try {
-      const dec: any = jwtDecode(t);
-      return dec.role as UserRole;
+      const decoded: any = jwtDecode(token);
+      return decoded.role as UserRole;
     } catch {
       return null;
     }
   }
 
+  /** Check if user has required role(s) */
   hasRole(roles: UserRole[] | UserRole): boolean {
-    const r = this.getUserRole();
-    const arr = Array.isArray(roles) ? roles : [roles];
-    return !!r && arr.includes(r);
+    const role = this.getUserRole();
+    const allowed = Array.isArray(roles) ? roles : [roles];
+    return !!role && allowed.includes(role);
+  }
+
+  /** Centralized error handling */
+  private handleError(error: any) {
+    console.error('AuthService Error:', error);
+    return throwError(() => error);
   }
 }

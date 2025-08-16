@@ -3,11 +3,9 @@ const { Order, OrderItem, Product, User } = require('../../models');
 const { requireAuth, allowRoles } = require('../middleware/auth');
 
 // List orders: admin sees all, others see their own
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', requireAuth, allowRoles('admin'), async (req, res) => {
     try {
-        const where = req.user.role === 'admin' ? {} : { userId: req.user.id };
         const orders = await Order.findAll({
-            where,
             include: [
                 {
                     model: Product,

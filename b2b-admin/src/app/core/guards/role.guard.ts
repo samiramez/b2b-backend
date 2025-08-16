@@ -14,7 +14,7 @@ export const roleGuard: CanMatchFn = (
     router.navigateByUrl('/login');
     return false;
   }
-  if (roles.length === 0) return true;
+  // if (roles.length === 0) return true; // unauthorized
 
   const ok = auth.hasRole(roles);
   if (!ok) router.navigateByUrl('/products');

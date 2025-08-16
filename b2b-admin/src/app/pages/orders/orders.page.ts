@@ -8,9 +8,9 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../../services/order.service';
 import { ProductService } from '../../services/product.service';
-import { Order, OrderItem } from '../../shared/models/order.model';
+import { Order, OrderItem } from '../../interface/order.model';
 import { AuthService } from '../../services/auth.service';
-import { Product } from '../../shared/models/product.model';
+import { Product } from '../../interface/product.model';
 import {
   IonContent,
   IonHeader,

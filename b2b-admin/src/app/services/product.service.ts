@@ -1,26 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Product } from '../shared/models/product.model';
+import { Product } from '../interface/product.model';
+import { endPoints } from 'src/api/apiConfig';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private base = `${environment.api}/products`;
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Product[]>(this.base);
+    return this.http.get<Product[]>(endPoints.products.getAll);
   }
-  getOne(id: number) {
-    return this.http.get<Product>(`${this.base}/${id}`);
+
+  getById(id: number) {
+    return this.http.get<Product>(endPoints.products.getById(id));
   }
+
   create(data: Product) {
-    return this.http.post<Product>(this.base, data);
+    return this.http.post<Product>(endPoints.products.create, data);
   }
+
   update(id: number, data: Partial<Product>) {
-    return this.http.put<Product>(`${this.base}/${id}`, data);
+    return this.http.put<Product>(endPoints.products.update(id), data);
   }
+
   remove(id: number) {
-    return this.http.delete<void>(`${this.base}/${id}`);
+    return this.http.delete<void>(endPoints.products.delete(id));
   }
 }

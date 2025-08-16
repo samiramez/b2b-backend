@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../services/auth.service';
-import { Product } from '../../shared/models/product.model';
+import { Product } from '../../interface/product.model';
 import {
   IonHeader,
   IonToolbar,
