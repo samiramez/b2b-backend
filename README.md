@@ -14,8 +14,7 @@
 - [API Documentation](#api-documentation)  
 - [Docker Setup](#docker-setup)  
 - [Usage](#usage)  
-- [Contributing](#contributing)  
-- [License](#license)  
+- [Contributing](#contributing)
 
 ---
 
