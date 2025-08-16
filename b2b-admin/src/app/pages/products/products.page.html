@@ -1,0 +1,87 @@
+<ion-header>
+    <ion-toolbar class="toolbar">
+        <ion-buttons slot="start">
+            <ion-menu-button class="menu-button"></ion-menu-button>
+        </ion-buttons>
+        <ion-title class="title">Product Management</ion-title>
+        <ion-buttons slot="end">
+            <ion-button fill="clear" class="logout-button" (click)="logout()">
+                <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding dashboard-content">
+    <!-- Add/Edit Product Card -->
+    <ion-card *ngIf="canManage" class="edit-card">
+        <ion-card-header>
+            <ion-card-title class="card-title">
+                {{ form.value.id ? 'Edit Product' : 'Add New Product' }}
+            </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+            <form (ngSubmit)="save()" [formGroup]="form" class="product-form">
+                <ion-item class="form-item">
+                    <ion-label position="floating">Product Name</ion-label>
+                    <ion-input formControlName="name" type="text"></ion-input>
+                </ion-item>
+
+                <ion-item class="form-item">
+                    <ion-label position="floating">Price ($)</ion-label>
+                    <ion-input formControlName="price" type="number"></ion-input>
+                </ion-item>
+
+                <div class="form-actions">
+                    <ion-button type="submit" shape="round" class="submit-button" [disabled]="form.invalid">
+                        {{ form.value.id ? 'Update Product' : 'Add Product' }}
+                    </ion-button>
+
+                    <ion-button *ngIf="form.value.id" fill="outline" shape="round" class="cancel-button"
+                        (click)="cancelEdit()">
+                        Cancel
+                    </ion-button>
+                </div>
+            </form>
+        </ion-card-content>
+    </ion-card>
+
+    <!-- Products List Card -->
+    <ion-card class="products-card">
+        <ion-card-header>
+            <ion-card-title class="card-title">Product Catalog</ion-card-title>
+            <ion-card-subtitle class="card-subtitle">{{ products.length }} products available</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+            <div class="table-container">
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th class="id-column">ID</th>
+                            <th class="name-column">Product Name</th>
+                            <th class="price-column">Price</th>
+                            <th *ngIf="canManage" class="actions-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let p of products; trackBy: trackById">
+                            <td class="id-cell">{{ p.id }}</td>
+                            <td class="name-cell">{{ p.name }}</td>
+                            <td class="price-cell">{{ p.price | currency:'USD':'symbol':'1.2-2' }}</td>
+                            <td *ngIf="canManage" class="actions-cell">
+                                <ion-button fill="clear" class="action-button" (click)="edit(p)">
+                                    <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                                </ion-button>
+                                <ion-button fill="clear" class="action-button delete" (click)="remove(p)">
+                                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                                </ion-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

@@ -1,0 +1,114 @@
+ion-content {
+  --background: #f4f6f9; // light silver background
+  color: #000; // make sure text is black
+}
+
+.login-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #000; // black text
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #6c757d; // silver/gray
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+mat-card {
+  padding: 2rem;
+  border-radius: 16px;
+  background: #fff; // white card
+  color: #6c757d; // silver
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.6s ease;
+}
+
+mat-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button[mat-raised-button] {
+  padding: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(25, 118, 210, 0.4);
+  }
+}
+
+.forgot-password {
+  text-align: center;
+  margin: 1rem 0;
+
+  a {
+    color: #6c757d; // silver
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    &:hover {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 1.5rem;
+
+  p {
+    color: #6c757d; // silver
+    font-size: 0.9rem;
+
+    a {
+      color: var(--ion-color-primary);
+      font-weight: 500;
+      text-decoration: none;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
