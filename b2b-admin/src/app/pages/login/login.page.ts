@@ -54,7 +54,15 @@ export class LoginPage {
     this.auth.login(this.form.value as any).subscribe({
       next: ({ token }) => {
         this.auth.setToken(token);
-        this.router.navigateByUrl('/products');
+
+        // Get the role after setting token
+        const role = this.auth.getUserRole();
+
+        if (role === 'customer') {
+          this.router.navigateByUrl('/orders');
+        } else {
+          this.router.navigateByUrl('/products');
+        }
       },
       error: (e) => {
         this.error = e?.error?.message || 'Login failed';

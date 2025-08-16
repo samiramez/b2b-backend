@@ -9,6 +9,7 @@ import {
 import { OrderService } from '../../services/order.service';
 import { ProductService } from '../../services/product.service';
 import { Order, OrderItem } from '../../shared/models/order.model';
+import { AuthService } from '../../services/auth.service';
 import { Product } from '../../shared/models/product.model';
 import {
   IonContent,
@@ -16,15 +17,27 @@ import {
   IonToolbar,
   IonTitle,
   IonButtons,
+  IonIcon,
+  IonButton,
   IonMenuButton,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonInput,
 } from '@ionic/angular/standalone';
-import { MatTableModule } from '@angular/material/table';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import {
+  personCircleOutline,
+  createOutline,
+  trashOutline,
+  logOutOutline,
+} from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-orders',
@@ -39,13 +52,18 @@ import { MatIconModule } from '@angular/material/icon';
     IonTitle,
     IonButtons,
     IonMenuButton,
-    MatTableModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
+    IonButton,
+    IonIcon,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonCardContent,
+    IonItem,
+    IonLabel,
+    IonSelect,
+    IonSelectOption,
+    IonInput,
   ],
   templateUrl: './orders.page.html',
 })
@@ -53,15 +71,23 @@ export class OrdersPage implements OnInit {
   private fb = inject(FormBuilder);
   private ordersApi = inject(OrderService);
   private productsApi = inject(ProductService);
+  private auth = inject(AuthService);
 
   orders: Order[] = [];
   products: Product[] = [];
 
-  displayedColumns = ['id', 'items', 'createdAt', 'actions'];
-
   form = this.fb.group({
     items: this.fb.array<FormArray>([]),
   });
+
+  constructor() {
+    addIcons({
+      personCircleOutline,
+      createOutline,
+      trashOutline,
+      logOutOutline,
+    });
+  }
 
   ngOnInit() {
     this.loadProducts();
@@ -72,7 +98,6 @@ export class OrdersPage implements OnInit {
   get items() {
     return this.form.get('items') as FormArray;
   }
-
   addItem() {
     this.items.push(
       this.fb.group({
@@ -99,10 +124,9 @@ export class OrdersPage implements OnInit {
     if (this.form.invalid) return;
     const payload: Order = { items: this.form.value.items as OrderItem[] };
     this.ordersApi.create(payload).subscribe(() => {
-      this.form.reset({ items: [] });
       this.items.clear();
-      this.addItem();
-      this.loadOrders();
+      this.addItem(); // reset form to one row
+      this.loadOrders(); // reload orders to display correct totals
     });
   }
 
@@ -112,10 +136,27 @@ export class OrdersPage implements OnInit {
     this.ordersApi.remove(o.id).subscribe(() => this.loadOrders());
   }
 
-  // helpers to render names if backend doesn't populate 'product'
+  logout() {
+    this.auth.logout();
+    window.location.href = '/login';
+  }
+
   productName(id?: number) {
     const p = this.products.find((x) => x.id === id);
     return p ? p.name : `#${id}`;
+  }
+
+  calculateOrderTotal(order: Order): number {
+    if (!order.products) return 0;
+    return order.products.reduce((total, prod) => {
+      const qty = prod.OrderItem?.quantity || 0;
+      const price = Number(prod.OrderItem?.unitPrice) || 0;
+      return total + qty * price;
+    }, 0);
+  }
+
+  trackById(index: number, item: Order) {
+    return item.id;
   }
 
   trackByIndex = (_: number, i: any) => i;

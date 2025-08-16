@@ -1,45 +1,36 @@
 import { Component, inject } from '@angular/core';
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet,
-} from '@angular/router';
+import { Router, NavigationEnd, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   IonApp,
-  IonSplitPane,
-  IonMenu,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
+  IonButtons,
+  IonButton,
+  IonIcon,
   IonRouterOutlet,
 } from '@ionic/angular/standalone';
 import { AuthService } from './services/auth.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
     IonApp,
-    IonSplitPane,
-    IonMenu,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonList,
-    IonItem,
-    IonLabel,
+    IonButtons,
+    IonButton,
+    IonIcon,
     IonRouterOutlet,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './app.component.html',
 })
@@ -47,11 +38,30 @@ export class AppComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  get isLoggedIn() {
+  pageTitle = 'Admin Dashboard';
+
+  // Define your pages and allowed roles
+  pages = [
+    { path: '/products', label: 'Products', roles: ['admin'] },
+    { path: '/orders', label: 'Orders', roles: ['admin', 'customer'] },
+  ];
+
+  get isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
   }
-  get role() {
-    return this.auth.getUserRole();
+
+  get role(): string {
+    return this.auth.getUserRole() ?? 'guest'; // Ensure role is always a string
+  }
+
+  constructor() {
+    // Update page title when navigation changes
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        const page = this.pages.find(p => event.urlAfterRedirects.startsWith(p.path));
+        this.pageTitle = page ? page.label : 'Admin Dashboard';
+      });
   }
 
   logout() {

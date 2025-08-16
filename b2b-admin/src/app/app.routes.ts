@@ -11,7 +11,7 @@ export const routes: Routes = [
     path: 'products',
     component: ProductsPage,
     canMatch: [authGuard],
-    data: { roles: ['admin', 'supplier', 'customer'] },
+    data: { roles: ['admin', 'supplier', 'customer'] }, //, 'customer'
   },
   {
     path: 'orders',
