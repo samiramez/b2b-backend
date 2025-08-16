@@ -181,6 +181,6 @@ Push branch: git push origin feature/your-feature
 Open a Pull Request
 
 
-[Login Page](image1.jpeg)
-[Order Page](image3.jpeg)
-[Product Page](image2.jpeg)
+![Login Page](image1.jpeg)
+![Order Page](image3.jpeg)
+![Product Page](image2.jpeg)
