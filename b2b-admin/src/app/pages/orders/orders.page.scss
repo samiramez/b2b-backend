@@ -159,3 +159,21 @@ ion-card {
     }
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+
+  span {
+    font-weight: 600;
+    color: #334155;
+  }
+
+  ion-button {
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+  }
+}

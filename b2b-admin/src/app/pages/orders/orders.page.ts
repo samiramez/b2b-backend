@@ -80,6 +80,10 @@ export class OrdersPage implements OnInit {
     items: this.fb.array<FormArray>([]),
   });
 
+  // Pagination properties
+  currentPage = 1;
+  pageSize = 5; // number of orders per page
+
   constructor() {
     addIcons({
       personCircleOutline,
@@ -95,9 +99,12 @@ export class OrdersPage implements OnInit {
     this.addItem(); // start with one row
   }
 
+  /** FormArray getter */
   get items() {
     return this.form.get('items') as FormArray;
   }
+
+  /** Add a new item row in the order form */
   addItem() {
     this.items.push(
       this.fb.group({
@@ -107,45 +114,48 @@ export class OrdersPage implements OnInit {
     );
   }
 
+  /** Remove an item row */
   removeItem(i: number) {
-    if (this.items.length === 1) return; // keep at least one row
+    if (this.items.length === 1) return; // always keep at least one row
     this.items.removeAt(i);
   }
 
+  /** Load products from API */
   loadProducts() {
     this.productsApi.getAll().subscribe((res) => (this.products = res));
   }
 
+  /** Load orders from API */
   loadOrders() {
     this.ordersApi.getAll().subscribe((res) => (this.orders = res));
   }
 
+  /** Submit new order */
   submit() {
     if (this.form.invalid) return;
     const payload: Order = { items: this.form.value.items as OrderItem[] };
     this.ordersApi.create(payload).subscribe(() => {
       this.items.clear();
-      this.addItem(); // reset form to one row
-      this.loadOrders(); // reload orders to display correct totals
+      this.addItem(); // reset form
+      this.loadOrders(); // reload orders to refresh table
+      this.currentPage = 1; // reset to first page
     });
   }
 
+  /** Delete an order */
   delete(o: Order) {
     if (!o.id) return;
     if (!confirm(`Delete order #${o.id}?`)) return;
     this.ordersApi.remove(o.id).subscribe(() => this.loadOrders());
   }
 
+  /** Logout function */
   logout() {
     this.auth.logout();
     window.location.href = '/login';
   }
 
-  productName(id?: number) {
-    const p = this.products.find((x) => x.id === id);
-    return p ? p.name : `#${id}`;
-  }
-
+  /** Calculate total price for an order */
   calculateOrderTotal(order: Order): number {
     if (!order.products) return 0;
     return order.products.reduce((total, prod) => {
@@ -155,9 +165,33 @@ export class OrdersPage implements OnInit {
     }, 0);
   }
 
+  /** TrackBy functions */
   trackById(index: number, item: Order) {
     return item.id;
   }
 
   trackByIndex = (_: number, i: any) => i;
+
+  // ---------------- Pagination Methods ----------------
+
+  /** Returns only the orders for the current page */
+  paginatedOrders(): Order[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.orders.slice(start, start + this.pageSize);
+  }
+
+  /** Calculate total pages */
+  totalPages(): number {
+    return Math.ceil(this.orders.length / this.pageSize) || 1;
+  }
+
+  /** Go to next page */
+  nextPage() {
+    if (this.currentPage < this.totalPages()) this.currentPage++;
+  }
+
+  /** Go to previous page */
+  prevPage() {
+    if (this.currentPage > 1) this.currentPage--;
+  }
 }
